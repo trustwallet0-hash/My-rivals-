@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Division Rivals Ladder</title>
+<style>
+:root{color-scheme:dark;--bg:#080b14;--card:#10162a;--line:#1d2744;--text:#eef2ff;--mut:#7d8aa8;--ac:#00d8ff;--ac2:#0a5cff;--glow:rgba(0,216,255,.65);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body.gold{--ac:#ffc83d;--ac2:#ff9a00;--glow:rgba(255,200,61,.7);--bg:#0d0a04;--card:#1a1508;--line:#3d2f10}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:radial-gradient(circle at 50% 0,color-mix(in srgb,var(--ac) 14%,transparent),transparent 55%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh;padding:14px;transition:background .5s}
+.wrap{max-width:1400px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.t1{font-weight:800;letter-spacing:.14em;font-size:13px;color:var(--ac)}
+.t2{color:var(--mut);font-size:12px}
+.boost{display:none;margin-bottom:10px;text-align:center;font-weight:800;letter-spacing:.15em;font-size:12px;color:#111;background:linear-gradient(90deg,#ffc83d,#ff8a00);border-radius:10px;padding:6px;animation:pl 1.3s infinite}
+.boost.on{display:block}
+.lad{position:relative;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:42px 8px 24px;overflow:visible}
+
+.rail{position:relative;display:flex;align-items:center;gap:clamp(2px,.7vw,12px);justify-content:space-between}
+.line{position:absolute;left:15px;right:15px;top:50%;height:3px;background:var(--line);transform:translateY(-50%)}
+.fill{position:absolute;left:15px;top:50%;height:3px;background:var(--ac);box-shadow:0 0 10px var(--glow);transform:translateY(-50%);transition:width .5s}
+.sh{position:relative;z-index:2;width:clamp(30px,6.5vw,64px);height:clamp(35px,7.5vw,74px);clip-path:polygon(0 0,100% 0,100% 70%,50% 100%,0 70%);display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(5px,1.2vw,12px);font-weight:900;font-size:clamp(14px,3.2vw,30px);flex:none}
+.sh.l{background:linear-gradient(160deg,#e8eefc,#7f8ba6);color:#1a2236}
+.sh.r{background:linear-gradient(160deg,#ffe07a,#c98a00);color:#3a2800}
+.nd{position:relative;z-index:2;flex:none;width:clamp(21px,5.6vw,52px);height:clamp(21px,5.6vw,52px);border-radius:clamp(5px,1vw,10px);background:#0a0f1d;border:2px solid var(--line);color:var(--mut);font-size:clamp(8px,1.9vw,16px);font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:.3s}
+.nd.done{border-color:var(--ac);color:var(--text)}
+.nd.now{width:clamp(28px,7.6vw,66px);height:clamp(28px,7.6vw,66px);font-size:clamp(11px,2.8vw,24px);color:#06101a;background:var(--ac);border-color:#fff;box-shadow:0 0 14px var(--glow),0 0 34px var(--glow),0 0 60px var(--glow);animation:pl 1.2s infinite}
+.nd.now::before{content:"";position:absolute;top:-20px;left:50%;margin-left:-8px;border:8px solid transparent;border-top:11px solid #fff;filter:drop-shadow(0 0 6px var(--glow))}
+.dot{position:absolute;top:-6px;right:-6px;width:10px;height:10px;border-radius:50%;border:2px solid var(--card)}
+@keyframes pl{50%{filter:brightness(1.35)}}
+.elite{background:var(--card);border:1px solid var(--ac);border-radius:18px;padding:26px;text-align:center;box-shadow:0 0 30px var(--glow)}
+.elite .sh{margin:0 auto 10px;width:84px;height:96px;font-size:14px;align-items:center;padding:0 0 10px}
+.elite input{width:120px;font-size:26px;text-align:center;background:#0a0f1d;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:6px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.st{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}
+.st b{display:block;font-size:18px}.st span{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+#ctl{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.b{border:1px solid var(--line);background:#0a0f1d;color:var(--text);border-radius:12px;padding:12px 6px;font-weight:700;font-size:13px;cursor:pointer}
+.w{background:rgba(0,230,118,.15);border-color:#00e676;color:#00e676}
+.d{background:rgba(255,200,61,.12);border-color:#ffc83d;color:#ffc83d}
+.l{background:rgba(255,77,77,.12);border-color:#ff4d4d;color:#ff4d4d}
+.b.on{box-shadow:0 0 12px #ffc83d;border-color:#ffc83d}
+.dv{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:var(--mut);margin-top:4px}
+.dv .b{padding:8px 14px}
+.tg{display:block;margin:10px auto 0;background:none;border:0;color:var(--mut);font-size:12px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div><div class="t1">DIVISION RIVALS</div><div class="t2" id="sub"></div></div><div class="t2" id="rec"></div></div>
+  <div class="boost" id="boost">⚡ BOOST ACTIVE ⚡</div>
+  <div id="main"></div>
+  <div class="stats">
+    <div class="st"><b id="sW">0</b><span>Wins</span></div>
+    <div class="st"><b id="sL">0</b><span>Losses</span></div>
+    <div class="st"><b id="sS">0</b><span>Streak</span></div>
+    <div class="st"><b id="sR">0%</b><span>Win rate</span></div>
+  </div>
+  <div id="ctl">
+    <div class="row">
+      <button class="b w" id="bW">WIN</button>
+      <button class="b d" id="bD">DRAW</button>
+      <button class="b l" id="bL">LOSS</button>
+    </div>
+    <div class="row">
+      <button class="b" id="bB">⚡ Boost</button>
+      <button class="b" id="bU">Undo</button>
+      <button class="b" id="bR">Reset</button>
+    </div>
+    <div class="dv"><span>Division</span><span><button class="b" id="dM">▼ Lower</button> <button class="b" id="dP">▲ Higher</button></span></div>
+    <div class="dv"><span>Tip: tap any stage on the ladder to jump to it.</span></div>
+  </div>
+  <button class="tg" id="tg">Hide controls</button>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyAR2ixufDxjQi5JEV4lWqmdzsCL7Z2_o1o",
+  authDomain: "rivals-ladder.firebaseapp.com",
+  projectId: "rivals-ladder",
+  storageBucket: "rivals-ladder.firebasestorage.app",
+  messagingSenderId: "802155292186",
+  appId: "1:802155292186:web:3a2ac2460912ac2c7b13a3"
+};
+const db = getFirestore(initializeApp(firebaseConfig));
+const ref = doc(db, 'ladder', 'state');
+const OVERLAY = location.hash === '#overlay';
+var ready = false, fromRemote = false;
+var RN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+var CP={1:'#ff7a3d',5:'#00e676',8:'#00e676',12:'#ffc83d'};
+var def={div:4,stage:1,streak:0,boost:false,w:0,l:0,sr:0,hist:[]};
+var st=Object.assign({},def);
+function save(){if(OVERLAY||!ready||fromRemote)return;setDoc(ref,{div:st.div,stage:st.stage,streak:st.streak,boost:st.boost,w:st.w,l:st.l,sr:st.sr}).catch(function(e){console.error(e);});}
+function snap(){st.hist.push({div:st.div,stage:st.stage,streak:st.streak,w:st.w,l:st.l});if(st.hist.length>60)st.hist.shift();}
+function move(n){st.stage+=n;while(st.stage>12&&st.div>0){st.stage-=12;st.div--;}if(st.div===0)st.stage=1;if(st.stage<1)st.stage=1;}
+function win(){snap();var n=(st.streak>=2?2:1)+(st.boost?1:0);st.w++;st.streak++;move(n);draw(true);}
+function drw(){snap();st.streak=0;draw();}
+function loss(){snap();st.l++;st.streak=0;if(st.div>0)move(-1);draw();}
+function undo(){var h=st.hist.pop();if(h)Object.assign(st,h);draw(true);}
+function reset(){if(confirm('Reset everything?')){st=Object.assign({},def,{hist:[]});draw(true);}}
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
+function draw(sc){
+  document.body.className=st.div<=3?'gold':'';
+  var m=document.getElementById('main');m.textContent='';
+  if(st.div===0){
+    var c=el('div','elite');c.appendChild(el('div','sh r','ELITE'));
+    c.appendChild(el('div','t2','Skill Rating'));
+    var i=el('input');i.type='number';i.value=st.sr;i.onchange=function(){st.sr=parseInt(this.value)||0;save();};c.appendChild(i);
+    m.appendChild(c);
+    document.getElementById('sub').textContent='Elite Division';
+  }else{
+    var lad=el('div','lad'),rail=el('div','rail');
+    rail.appendChild(el('div','line'));
+    var fill=el('div','fill');rail.appendChild(fill);
+    rail.appendChild(el('div','sh l',String(st.div)));
+    var cur=null;
+    for(var k=1;k<=12;k++){(function(k){
+      var cls='nd'+(k<st.stage?' done':(k===st.stage?' now':''));
+      var b=el('button',cls,RN[k-1]);
+      if(CP[k]){var d=el('span','dot');d.style.background=CP[k];b.appendChild(d);}
+      b.onclick=function(){snap();st.stage=k;draw(true);};
+      if(k===st.stage)cur=b;
+      rail.appendChild(b);
+    })(k);}
+    rail.appendChild(el('div','sh r',st.div===1?'E':String(st.div-1)));
+    lad.appendChild(rail);m.appendChild(lad);
+    var pct=(st.stage-1)/12;
+    requestAnimationFrame(function(){if(cur)fill.style.width=Math.max(0,cur.offsetLeft+cur.offsetWidth/2-15)+'px';});
+    document.getElementById('sub').textContent='Division '+st.div+' · Rank '+RN[st.stage-1];
+  }
+  document.getElementById('rec').textContent=st.streak>=2?'🔥 Win streak '+st.streak:'';
+  document.getElementById('sW').textContent=st.w;
+  document.getElementById('sL').textContent=st.l;
+  document.getElementById('sS').textContent=st.streak;
+  var g=st.w+st.l;document.getElementById('sR').textContent=g?Math.round(st.w/g*100)+'%':'0%';
+  document.getElementById('boost').className='boost'+(st.boost?' on':'');
+  document.getElementById('bB').className='b'+(st.boost?' on':'');
+  save();
+}
+document.getElementById('bW').onclick=win;
+document.getElementById('bD').onclick=drw;
+document.getElementById('bL').onclick=loss;
+document.getElementById('bU').onclick=undo;
+document.getElementById('bR').onclick=reset;
+document.getElementById('bB').onclick=function(){st.boost=!st.boost;draw();};
+document.getElementById('dM').onclick=function(){snap();if(st.div<10){st.div++;st.stage=1;}draw(true);};
+document.getElementById('dP').onclick=function(){snap();if(st.div>0){st.div--;st.stage=1;}draw(true);};
+var tg=document.getElementById('tg'),ctl=document.getElementById('ctl');
+tg.onclick=function(){var h=ctl.style.display!=='none';ctl.style.display=h?'none':'block';tg.textContent=h?'Show controls':'Hide controls';};
+if(OVERLAY){ctl.style.display='none';tg.style.display='none';document.body.style.background='transparent';document.documentElement.style.background='transparent';}
+window.addEventListener('resize',function(){draw();});
+draw(true);
+onSnapshot(ref,function(s){
+  fromRemote=true;
+  if(s.exists()){var d=s.data();['div','stage','streak','boost','w','l','sr'].forEach(function(k){if(d[k]!==undefined)st[k]=d[k];});}
+  draw(true);
+  fromRemote=false;
+  if(!ready){ready=true;if(!s.exists())save();}
+},function(e){console.error(e);document.getElementById('sub').textContent='Connection problem';});
+</script>
+</body>
+</html>
