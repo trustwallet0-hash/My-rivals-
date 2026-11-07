@@ -77,7 +77,7 @@ body{background:var(--bg);background-image:radial-gradient(circle at 50% 0,color
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyAR2ixufDxjQi5JEV4lWqmdzsCL7Z2_o1o",
   authDomain: "rivals-ladder.firebaseapp.com",
@@ -86,7 +86,7 @@ const firebaseConfig = {
   messagingSenderId: "802155292186",
   appId: "1:802155292186:web:3a2ac2460912ac2c7b13a3"
 };
-const db = getFirestore(initializeApp(firebaseConfig));
+const db = initializeFirestore(initializeApp(firebaseConfig), { experimentalForceLongPolling: true });
 const ref = doc(db, 'ladder', 'state');
 const OVERLAY = location.hash === '#overlay';
 var ready = false, fromRemote = false;
