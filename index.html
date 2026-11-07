@@ -161,6 +161,20 @@ onSnapshot(ref,function(s){
   fromRemote=false;
   if(!ready){ready=true;if(!s.exists())save();}
 },function(e){console.error(e);document.getElementById('sub').textContent='Connection problem';});
+
+/* Fallback for TikTok Studio: plain HTTPS polling every 2 seconds */
+var PURL='https://firestore.googleapis.com/v1/projects/'+firebaseConfig.projectId+'/databases/(default)/documents/ladder/state?key='+firebaseConfig.apiKey;
+var perr=false;
+function fv(v){if(!v)return undefined;if('integerValue' in v)return parseInt(v.integerValue,10);if('doubleValue' in v)return v.doubleValue;if('booleanValue' in v)return v.booleanValue;return undefined;}
+function poll(){
+  fetch(PURL+'&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(j){
+    var f=j.fields||{},changed=false;
+    ['div','stage','streak','boost','w','l','sr'].forEach(function(k){var v=fv(f[k]);if(v!==undefined&&st[k]!==v){st[k]=v;changed=true;}});
+    if(changed||perr){perr=false;fromRemote=true;draw(true);fromRemote=false;}
+  }).catch(function(e){perr=true;document.getElementById('sub').textContent='Poll error: '+e.message;});
+}
+if(OVERLAY){poll();setInterval(poll,2000);}
 </script>
 </body>
 </html>
+
